@@ -1,6 +1,7 @@
 import React from 'react'
 import App from "next/app"
 import Head from "next/head"
+import Layout from "../components/layout"
 
 export default class MyApp extends App {
   render() {
@@ -13,7 +14,10 @@ export default class MyApp extends App {
             href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
           />
         </Head>
-        <Component {...pageProps} />
+        <Layout>
+          {/* Componentはすべてのコンポーネントを指す */}
+          <Component {...pageProps} />
+        </Layout>
       </>
     )
   }
