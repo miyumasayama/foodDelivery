@@ -1,5 +1,6 @@
 
 import { Alert, Button, Col, InputGroup, InputGroupText, Row, Input } from 'reactstrap'
+import RestaurantsList from '../components/restaurantsList';
 const index = () => {
   return (
     <div className='container-fluid'>
@@ -13,6 +14,7 @@ const index = () => {
           </div>
         </Col>
       </Row>
+      <RestaurantsList />
       <style jsx>{` 
         .search {
           margin: 20px;
