@@ -14,10 +14,9 @@ const query = gql`
   }
 `
 
-const RestaurantsList = () => {
+const RestaurantsList = (props) => {
   const { isLoading, error, data } = useQuery(query)
-
-  console.log(data)
+  const { query } = props
   if (data?.restaurants && data?.restaurants.length) {
 
     return (
