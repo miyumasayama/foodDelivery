@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Card, CardBody, CardImg, CardTitle, Col, Row } from "reactstrap";
 import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks'
+import { search } from "../../utils/restaurants";
 
 const query = gql`
   {
@@ -16,12 +17,11 @@ const query = gql`
 
 const RestaurantsList = (props) => {
   const { isLoading, error, data } = useQuery(query)
-  const { query } = props
+  const searchedRestaurants = search(data?.restaurants ?? [], props.query)
   if (data?.restaurants && data?.restaurants.length) {
-
     return (
       <Row>
-        {data?.restaurants.map((restaurant) => {
+        {searchedRestaurants.map((restaurant) => {
           return (
             <Col xs="6" sm="4" key={restaurant.documentId}>
               <Card style={{ margin: "0 0.5rem 20px 0.5rem" }}>
