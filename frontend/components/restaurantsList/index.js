@@ -18,6 +18,16 @@ const query = gql`
 const RestaurantsList = (props) => {
   const { isLoading, error, data } = useQuery(query)
   const searchedRestaurants = search(data?.restaurants ?? [], props.query)
+  if (error) {
+    return (
+      <h1>レストランの読み込みに失敗しました。</h1>
+    )
+  }
+  if (isLoading) {
+    return (
+      <h1>読み込み中...</h1>
+    )
+  }
   if (data?.restaurants && data?.restaurants.length) {
     return (
       <Row>
@@ -31,7 +41,7 @@ const RestaurantsList = (props) => {
                   <CardTitle>{restaurant.desciption?.at(0).children?.at(0).text ?? ''}</CardTitle>
                 </CardBody>
                 <div className="card-footer">
-                  <Link href={`restautants/${restaurant.documentId}`} as={`restautants?id=${restaurant.documentId}`}>
+                  <Link as={`restaurants/${restaurant.documentId}`} href={`restaurants?id=${restaurant.documentId}`}>
                     <a className="btn btn-primary">もっと見る</a>
                   </Link>
                 </div>
