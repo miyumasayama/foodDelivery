@@ -1,4 +1,4 @@
-import { Col, Card, CardBody, CardImg, CardTitle, Row, } from 'reactstrap'
+import { Col, Card, CardBody, CardImg, CardTitle, Row, Button } from 'reactstrap'
 import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks'
 import { useRouter } from "next/router";
@@ -38,28 +38,28 @@ const Restaurants = () => {
   }
 
   return (
-    <Row>
-      {data?.restaurant?.dishes.map((dish) => {
-        return (
-          <Col xs="6" sm="4" key={dish.documentId}>
-            <Card style={{ margin: "0 0.5rem 20px 0.5rem" }}>
-              <CardImg src={`${process.env.NEXT_PUBLIC_API_URL}${dish.image.url}`} top={true} style={{ height: 250 }} />
-              <CardBody>
-                <CardTitle>{dish.name ?? ''}</CardTitle>
-                <CardTitle>{dish.desciption?.at(0).children?.at(0).text ?? ''}</CardTitle>
-              </CardBody>
-              {/* <div className="card-footer">
-                <Link as={`restautants/${dish.documentId}`} href={`restautants?id=${restaurant.documentId}`}>
-                  <a className="btn btn-primary">もっと見る</a>
-                </Link>
-              </div> */}
-            </Card>
-          </Col>
-        )
+    <>
+      <h1>{data.restaurant.name}</h1>
+      <Row>
+        {data?.restaurant?.dishes.map((dish) => {
+          return (
+            <Col xs="6" sm="4" key={dish.documentId} style={{ padding: 0 }}>
+              <Card style={{ margin: "0 10px" }}>
+                <CardImg src={`${process.env.NEXT_PUBLIC_API_URL}${dish.image.url}`} top={true} style={{ height: 250 }} />
+                <CardBody>
+                  <CardTitle>{dish.name ?? ''}</CardTitle>
+                  <CardTitle>{dish.desciption?.at(0).children?.at(0).text ?? ''}</CardTitle>
+                </CardBody>
+                <div className="card-footer">
+                  <Button color="primary" outline>+ カートに入れる</Button>
+                </div>
+              </Card>
+            </Col>
+          )
 
-      })}
-      <style jsx>
-        {`
+        })}
+        <style jsx>
+          {`
           a {
             color: white;
           }
@@ -74,8 +74,9 @@ const Restaurants = () => {
             column-count: 3
           }
         `}
-      </style>
-    </Row>
+        </style>
+      </Row >
+    </>
   );
 }
 
