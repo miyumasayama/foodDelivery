@@ -36,6 +36,21 @@ const register = () => {
           </section>
         </Col>
       </Row>
+      <style jsx>
+        {`
+          .paper {
+            text-align: center;
+            margin-top: 50px;
+          }
+          .header {
+            width: 100%;
+            margin-bottom: 30px;
+          }
+          .wrapper {
+            padding: 10px 30px 20px 30px
+          }
+        `}
+      </style>
     </Container>
   );
 }
