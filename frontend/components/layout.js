@@ -28,6 +28,16 @@ const layout = (props) => {
               <a className='navbar-brand'>ホーム</a>
             </Link>
           </NavItem>
+          <NavItem className='ml-auto'>
+            <Link href="/register">
+              <a className='nav-link'>サインイン</a>
+            </Link>
+          </NavItem>
+          <NavItem>
+            <Link href="/register">
+              <a className='nav-link'>サインアップ</a>
+            </Link>
+          </NavItem>
         </Nav>
       </header>
       <Container>{props.children}</Container>
