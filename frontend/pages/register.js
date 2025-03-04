@@ -1,11 +1,17 @@
 import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap"
 import { register as registerUser } from "../lib/auth"
-import { useState } from "react"
+import { useContext, useState } from "react"
+import AppContext from "../context/context"
 
 const register = () => {
+  const appContext = useContext(AppContext)
   const [data, setData] = useState({ username: '', email: '', password: '' })
   const handleClick = () => {
-    registerUser(...data)
+    registerUser(data.username, data.email, data.password)
+      .then((res) => {
+        appContext.setUser(res.data.user)
+      })
+      .catch((error) => console.error(error))
   }
 
   return (
