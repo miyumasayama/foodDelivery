@@ -2,14 +2,16 @@ import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reac
 import { register as registerUser } from "../lib/auth"
 import { useContext, useState } from "react"
 import AppContext from "../context/context"
+import Cookie from 'js-cookie'
 
 const register = () => {
   const appContext = useContext(AppContext)
   const [data, setData] = useState({ username: '', email: '', password: '' })
   const handleClick = () => {
     registerUser(data.username, data.email, data.password)
-      .then((res) => {
-        appContext.setUser(res.data.user)
+      .then(() => {
+        // TODO: 帰ってきたデータをセットしたい
+        appContext.setUser({ ...data })
       })
       .catch((error) => console.error(error))
   }
