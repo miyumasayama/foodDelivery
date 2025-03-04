@@ -1,6 +1,21 @@
 import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap"
+import { register as registerUser } from "../lib/auth"
+import { useContext, useState } from "react"
+import AppContext from "../context/context"
+import Cookie from 'js-cookie'
 
 const register = () => {
+  const appContext = useContext(AppContext)
+  const [data, setData] = useState({ username: '', email: '', password: '' })
+  const handleClick = () => {
+    registerUser(data.username, data.email, data.password)
+      .then(() => {
+        // TODO: 帰ってきたデータをセットしたい
+        appContext.setUser({ ...data })
+      })
+      .catch((error) => console.error(error))
+  }
+
   return (
     <Container>
       <Row>
@@ -15,22 +30,22 @@ const register = () => {
               <fieldset>
                 <FormGroup>
                   <Label>ユーザー名</Label>
-                  <Input type="text" name="username" syle={{ height: 50, fontSize: "1.2rem" }} />
+                  <Input type="text" name="username" onChange={(e) => setData({ ...data, username: e.target.value })} syle={{ height: 50, fontSize: "1.2rem" }} />
                 </FormGroup>
                 <FormGroup>
                   <Label>メールアドレス</Label>
-                  <Input type="text" name="email" syle={{ height: 50, fontSize: "1.2rem" }} />
+                  <Input type="text" name="email" onChange={(e) => setData({ ...data, email: e.target.value })} syle={{ height: 50, fontSize: "1.2rem" }} />
                 </FormGroup>
                 <FormGroup>
                   <Label>パスワード</Label>
-                  <Input type="password" name="password" syle={{ height: 50, fontSize: "1.2rem" }} />
+                  <Input type="password" name="password" onChange={(e) => setData({ ...data, password: e.target.value })} syle={{ height: 50, fontSize: "1.2rem" }} />
                 </FormGroup>
                 <span>
                   <a href="">
                     <small>パスワードをお忘れですか?</small>
                   </a>
                 </span>
-                <Button style={{ float: 'right', width: 120 }} color="primary">登録</Button>
+                <Button style={{ float: 'right', width: 120 }} color="primary" onClick={() => handleClick()}>登録</Button>
               </fieldset>
             </Form>
           </section>

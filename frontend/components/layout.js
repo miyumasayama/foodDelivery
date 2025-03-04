@@ -1,10 +1,12 @@
-import React from 'react'
-import App from "next/app"
+import React, { useContext } from 'react'
 import Head from "next/head"
 import Link from "next/link"
 import { Nav, NavItem, Container } from 'reactstrap';
+import AppContext from '../context/context';
+
 
 const layout = (props) => {
+  const { user, setUser } = useContext(AppContext)
   return (
     <div>
       <Head>
@@ -29,14 +31,23 @@ const layout = (props) => {
             </Link>
           </NavItem>
           <NavItem className='ml-auto'>
-            <Link href="/register">
-              <a className='nav-link'>サインイン</a>
-            </Link>
+            {user ? (
+              <Link href="/">
+                <a className='nav-link'>ログアウト</a>
+              </Link>
+            ) : (
+              <Link href="/register">
+                <a className='nav-link' onClick={() => setUser(null)}>ログイン</a>
+              </Link>
+            )}
           </NavItem>
           <NavItem>
-            <Link href="/register">
-              <a className='nav-link'>サインアップ</a>
-            </Link>
+            {user ? (<h5>{user.username}</h5>) : (
+              <Link href="/">
+                <a className='nav-link'>ユーザー新規登録</a>
+              </Link>
+            )}
+
           </NavItem>
         </Nav>
       </header>
