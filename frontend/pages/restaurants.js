@@ -2,6 +2,7 @@ import { Col, Card, CardBody, CardImg, CardTitle, Row, Button } from 'reactstrap
 import { gql } from "apollo-boost";
 import { useQuery } from '@apollo/react-hooks'
 import { useRouter } from "next/router";
+import Cart from '../components/cart';
 
 const GET_RESTAURANT_DISHES = gql`
   
@@ -39,11 +40,11 @@ const Restaurants = () => {
 
   return (
     <>
-      <h1>{data.restaurant.name}</h1>
+      <h1>{data?.restaurant.name}</h1>
       <Row>
-        {data?.restaurant?.dishes.map((dish) => {
+        {data?.restaurant?.dishes.map((dish, index) => {
           return (
-            <Col xs="6" sm="4" key={dish.documentId} style={{ padding: 0 }}>
+            <Col key={index} xs="6" sm="4" style={{ padding: 0 }}>
               <Card style={{ margin: "0 10px" }}>
                 <CardImg src={`${process.env.NEXT_PUBLIC_API_URL}${dish.image.url}`} top={true} style={{ height: 250 }} />
                 <CardBody>
@@ -56,7 +57,6 @@ const Restaurants = () => {
               </Card>
             </Col>
           )
-
         })}
         <style jsx>
           {`
@@ -75,6 +75,11 @@ const Restaurants = () => {
           }
         `}
         </style>
+        <Col xs={3} style={{ padding: 0 }}>
+          <div>
+            <Cart />
+          </div>
+        </Col>
       </Row >
     </>
   );
