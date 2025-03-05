@@ -11,7 +11,7 @@ export const register = (username, email, password) => {
       email,
       password
     }).then((res) => {
-      Cookie.set("token", res.data.jw, { expires: 7 })
+      Cookie.set("token", res.data.jwt, { expires: 7 })
       resolve(res)
       window.location.href = '/'
     }).catch((error) => {
@@ -28,7 +28,7 @@ export const login = (identifier, password) => {
       identifier,
       password
     }).then((res) => {
-      Cookie.set("token", res.data.jw, { expires: 7 })
+      Cookie.set("token", res.data.jwt, { expires: 7 })
       resolve(res)
       window.location.href = '/'
     }).catch((error) => {
