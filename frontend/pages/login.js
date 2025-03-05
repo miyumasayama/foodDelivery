@@ -1,18 +1,20 @@
 import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap"
-import { register as registerUser } from "../lib/auth"
 import { useContext, useState } from "react"
+import { login as loginUser } from "../lib/auth"
 import AppContext from "../context/context"
 
-const register = () => {
+const login = () => {
   const appContext = useContext(AppContext)
-  const [data, setData] = useState({ username: '', email: '', password: '' })
+  const [data, setData] = useState({ identifier: '', password: '' })
+
   const handleClick = () => {
-    registerUser(data.username, data.email, data.password)
-      .then((res) => {
-        // TODO: 帰ってきたデータをセットしたい
-        appContext.setUser(res.data.user)
-      })
+    loginUser(data.identifier, data.password)
+      .then((res) => { appContext.setUser(res.data.user) })
       .catch((error) => console.error(error))
+  }
+
+  const handleChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value })
   }
 
   return (
@@ -21,25 +23,26 @@ const register = () => {
         <Col>
           <div className="paper">
             <div className="header">
-              <h2>ユーザー登録</h2>
+              <h2>ログイン</h2>
             </div>
           </div>
           <section className="wrapper">
             <Form>
               <fieldset>
                 <FormGroup>
-                  <Label>ユーザー名</Label>
-                  <Input type="text" name="username" onChange={(e) => setData({ ...data, username: e.target.value })} syle={{ height: 50, fontSize: "1.2rem" }} />
-                </FormGroup>
-                <FormGroup>
                   <Label>メールアドレス</Label>
-                  <Input type="text" name="email" onChange={(e) => setData({ ...data, email: e.target.value })} syle={{ height: 50, fontSize: "1.2rem" }} />
+                  <Input type="text" name="identifier" onChange={(e) => handleChange(e)} syle={{ height: 50, fontSize: "1.2rem" }} />
                 </FormGroup>
                 <FormGroup>
                   <Label>パスワード</Label>
-                  <Input type="password" name="password" onChange={(e) => setData({ ...data, password: e.target.value })} syle={{ height: 50, fontSize: "1.2rem" }} />
+                  <Input type="password" name="password" onChange={(e) => handleChange(e)} syle={{ height: 50, fontSize: "1.2rem" }} />
                 </FormGroup>
-                <Button style={{ float: 'right', width: 120 }} color="primary" onClick={() => handleClick()}>登録</Button>
+                <span>
+                  <a href="">
+                    <small>パスワードをお忘れですか?</small>
+                  </a>
+                </span>
+                <Button style={{ float: 'right', width: 120 }} color="primary" onClick={() => handleClick()}>ログイン</Button>
               </fieldset>
             </Form>
           </section>
@@ -64,4 +67,4 @@ const register = () => {
   );
 }
 
-export default register;
+export default login;

@@ -14,7 +14,6 @@ class MyApp extends App {
   setUser = (user) => {
     this.setState({ user })
   }
-
   render() {
     const { Component, pageProps } = this.props
     return (

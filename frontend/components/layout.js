@@ -36,7 +36,7 @@ const layout = (props) => {
                 <a className='nav-link'>ログアウト</a>
               </Link>
             ) : (
-              <Link href="/register">
+              <Link href="/login">
                 <a className='nav-link' onClick={() => setUser(null)}>ログイン</a>
               </Link>
             )}
