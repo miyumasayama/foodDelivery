@@ -21,7 +21,6 @@ class MyApp extends App {
   // Mount時にクッキー情報が残っているかを確認
   componentDidMount() {
     const token = Cookie.get("token")
-    console.log(token)
     if (!!token) {
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
         headers: {
@@ -43,11 +42,10 @@ class MyApp extends App {
   // カートに商品を追加する
   addItem = (item) => {
     let { items } = this.state.cart
-    const newItem = items.find((i) => {
+    const duplicatedItem = items.find((i) =>
       i.documentId === item.documentId
-    })
-
-    if (!newItem) {
+    )
+    if (!duplicatedItem) {
       item.quantity = 1;
       this.setState({
         cart: {
@@ -74,7 +72,11 @@ class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props
     return (
-      <AppContext.Provider value={{ user: this.state.user, setUser: this.setUser }}>
+      <AppContext.Provider
+        value={{
+          user: this.state.user, setUser: this.setUser, addItem: this.addItem
+        }}
+      >
         <Head>
           <link
             rel="stylesheet"
