@@ -5,12 +5,14 @@ import Layout from "../components/layout"
 import withData from "../lib/apollo"
 import AppContext from '../context/context'
 import Cookie from 'js-cookie'
+import Cookies from 'js-cookie'
 
 class MyApp extends App {
 
   // classコンポーネントのためuseStateを使えないが、意味的にはconst [user, setUser] = useState(null)と同じ
   state = {
-    user: null
+    user: null,
+    cart: { items: [], total: 0 }
   }
   setUser = (user) => {
     this.setState({ user })
@@ -35,6 +37,37 @@ class MyApp extends App {
         const user = await res.json();
         this.setUser(user)
       })
+    }
+  }
+
+  // カートに商品を追加する
+  addItem = (item) => {
+    let { items } = this.state.cart
+    const newItem = items.find((i) => {
+      i.documentId === item.documentId
+    })
+
+    if (!newItem) {
+      item.quantity = 1;
+      this.setState({
+        cart: {
+          items: [...items, item]
+        },
+        total: this.state.cart.item + item.price
+      },
+        () => Cookies.set("cart", this.state.cart.items)
+      )
+    } else {
+      this.setState({
+        cart: {
+          items: this.state.cart.items.map((item) =>
+            item.documentId === newItem.documentId ?
+              Object.assign({}, item, { quantity: item.quantity + 1 }) : item)
+        },
+        total: this.state.cart.total + item.price
+      },
+        () => Cookies.set("cart", this.state.cart.items)
+      )
     }
   }
 
