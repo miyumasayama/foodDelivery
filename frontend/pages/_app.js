@@ -41,7 +41,7 @@ class MyApp extends App {
 
   // カートに商品を追加する
   addItem = (item) => {
-    let { items } = this.state.cart
+    let items = this.state.cart.items ?? []
     const duplicatedItem = items.find((i) =>
       i.documentId === item.documentId
     )
@@ -49,9 +49,10 @@ class MyApp extends App {
       item.quantity = 1;
       this.setState({
         cart: {
-          items: [...items, item]
+          items: [...items, item],
+          total: this.state.cart.total + item.price
         },
-        total: this.state.cart.item + item.price
+
       },
         () => Cookies.set("cart", this.state.cart.items)
       )
@@ -59,10 +60,45 @@ class MyApp extends App {
       this.setState({
         cart: {
           items: this.state.cart.items.map((item) =>
-            item.documentId === newItem.documentId ?
-              Object.assign({}, item, { quantity: item.quantity + 1 }) : item)
+            item.documentId === duplicatedItem.documentId ?
+              Object.assign({}, item, { quantity: item.quantity + 1 }) : item),
+          total: this.state.cart.total + item.price
         },
-        total: this.state.cart.total + item.price
+
+      },
+        () => Cookies.set("cart", this.state.cart.items)
+      )
+    }
+  }
+
+  // カートに商品を追加する
+  removeItem = (item) => {
+    let { items } = this.state.cart
+    const removedItem = items?.find((i) =>
+      i.documentId === item.documentId
+    )
+    if (removedItem.quantity > 1) {
+      this.setState({
+        cart: {
+          items: this.state.cart.items.map((item) =>
+            item.documentId === removedItem.documentId ?
+              Object.assign({}, item, { quantity: item.quantity - 1 }) : item),
+          total: this.state.cart.total - item.price
+        },
+
+      },
+        () => Cookies.set("cart", this.state.cart.items)
+      )
+    } else {
+      const items = [...this.state.cart.items]
+      const index = items.findIndex((item) => item.documentId === removedItem.documentId)
+      items.splice(index, 1)
+      this.setState({
+        cart: {
+          items,
+          total: this.state.cart.total - item.price
+        },
+
       },
         () => Cookies.set("cart", this.state.cart.items)
       )
@@ -74,7 +110,11 @@ class MyApp extends App {
     return (
       <AppContext.Provider
         value={{
-          user: this.state.user, setUser: this.setUser, addItem: this.addItem
+          user: this.state.user,
+          cart: this.state.cart,
+          setUser: this.setUser,
+          addItem: this.addItem,
+          removeItem: this.removeItem
         }}
       >
         <Head>
