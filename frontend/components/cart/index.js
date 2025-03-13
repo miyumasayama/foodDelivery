@@ -6,7 +6,7 @@ import AppContext from "../../context/context";
 const Cart = () => {
   const appContext = useContext(AppContext)
   const { cart } = appContext
-  console.log(cart)
+
   return (
     <div>
       <Card style={{ padding: "10px 5px" }}>
@@ -17,7 +17,7 @@ const Cart = () => {
             <small>料理：</small>
           </div>
           <div>
-            {cart.items.length ? cart.items.map((item) => {
+            {cart.items?.length ? cart.items.map((item) => {
               if (item.quantity > 0) {
                 return (
                   <div className="items-one" style={{ marginBottom: "15px" }}>
@@ -26,10 +26,18 @@ const Cart = () => {
                       <span id="item-name">&nbsp; {item.name}</span>
                     </div>
                     <div>
-                      <Button color="primary" outline style={{ height: 25, padding: 0, width: 25, marginRight: 5, marginLeft: 10 }}>
+                      <Button
+                        onClick={() => appContext.addItem(item)}
+                        color="primary"
+                        outline
+                        style={{ height: 25, padding: 0, width: 25, marginRight: 5, marginLeft: 10 }}>
                         +
                       </Button>
-                      <Button color="primary" outline style={{ height: 25, padding: 0, width: 25, marginRight: 5, marginLeft: 10 }}>
+                      <Button
+                        onClick={() => appContext.removeItem(item)}
+                        color="primary"
+                        outline
+                        style={{ height: 25, padding: 0, width: 25, marginRight: 5, marginLeft: 10 }}>
                         -
                       </Button>
                       <span id="item-quantity" style={{ marginLeft: 5 }}>{item.quantity}つ</span>
