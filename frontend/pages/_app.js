@@ -4,7 +4,6 @@ import Head from "next/head"
 import Layout from "../components/layout"
 import withData from "../lib/apollo"
 import AppContext from '../context/context'
-import Cookie from 'js-cookie'
 import Cookies from 'js-cookie'
 
 class MyApp extends App {
@@ -20,7 +19,19 @@ class MyApp extends App {
 
   // Mount時にクッキー情報が残っているかを確認
   componentDidMount() {
-    const token = Cookie.get("token")
+    const token = Cookies.get("token")
+    const cart = Cookies.get("cart")
+
+    if (cart != undefined) {
+      JSON.parse(cart).forEach((item) => {
+        this.setState({
+          cart: {
+            items: JSON.parse(cart),
+            total: this.state.cart.total += item.price * item.quantity
+          }
+        })
+      })
+    }
     if (!!token) {
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
         headers: {
@@ -29,7 +40,7 @@ class MyApp extends App {
         }
       }).then(async (res) => {
         if (!res.ok) {
-          Cookie.remove('token')
+          Cookies.remove('token')
           this.setState({ user: null })
           return null
         }
