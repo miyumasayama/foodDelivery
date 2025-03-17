@@ -6,6 +6,7 @@ import { factories } from '@strapi/strapi'
 
 const stripe = require('stripe')('sk_test_51R2lI2QQ87M73I9RWMYwriwwsLQD2pRXzui79ixK7Cns5PKNDS2ZxDGAam9dQarBXMn4yAmHwVyhYN1Ev73gaDXT00nZootHlc');
 
+// controllerの作成
 module.exports = factories.createCoreController('api::order.order', ({ strapi }) => ({
   // 注文を作成する
   async create(ctx) {
