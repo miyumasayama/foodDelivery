@@ -1,7 +1,34 @@
 import { FormGroup, Input, Label } from "reactstrap"
 import { CardSection } from "./fragments/cardSection"
+import { Cookies } from "js-cookie"
+import AppContext from "../../context/context"
+import { useContext } from "react"
 
 export const CheckoutForm = () => {
+  const userToken = Cookies.get('token')
+  const appContext = useContext(AppContext)
+  const [data, setData] = useState({
+    address: '',
+    stripe_id: ''
+  })
+  const handleChange = (e) => {
+    const updatedItem = data[e.target.name] = e.target.value
+    setData({ ...data, updatedItem })
+  }
+  const submitOrder = async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders`, {
+      method: 'post',
+      headers: userToken && {
+        Authorization: `Bearer ${userToken}`
+      },
+      body: JSON.stringify({
+        amount: Number(appContext.cart.total),
+        dishes: appContext.cart.items,
+        adress: data.adress
+      })
+    })
+  }
+
   return (
     <div className="paper">
       <h5>あなたの情報</h5>
@@ -9,7 +36,7 @@ export const CheckoutForm = () => {
       <FormGroup>
         <div>
           <Label>住所</Label>
-          <Input name="address" />
+          <Input name="address" onChange={(e) => handleChange(e)} />
         </div>
       </FormGroup>
       < CardSection />
