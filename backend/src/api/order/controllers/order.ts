@@ -11,13 +11,15 @@ module.exports = factories.createCoreController('api::order.order', ({ strapi })
   // 注文を作成する
   async create(ctx) {
     try {
-      const { address, amount, dishes, token } = JSON.parse(ctx.request.body);
+      const { address, amount, dishes, token } = JSON.parse(ctx.request.body)
 
       // Stripeで支払いを作成
-      const charge = await stripe.charges.create({
+      // https://docs.stripe.com/api/payment_intents/create
+      const charge = await stripe.paymentIntents.create({
         amount: amount * 100, // Stripeは最小単位 (円ではなく"銭") で処理するので、100倍する
         currency: 'jpy',
-        source: token,
+        // source: token, 
+        // payment_method: token,
         description: `Order ${new Date()} by ${ctx.state.user.id}`,
       });
 
@@ -35,7 +37,7 @@ module.exports = factories.createCoreController('api::order.order', ({ strapi })
       return order;
     } catch (error) {
       ctx.response.status = 500;
-      return { error: '注文の作成に失敗しました', details: error.message };
+      return { error: '注文の作成に失敗しましたよ', details: error.message };
     }
   }
 }));
