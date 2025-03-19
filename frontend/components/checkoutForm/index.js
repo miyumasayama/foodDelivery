@@ -1,7 +1,54 @@
 import { FormGroup, Input, Label } from "reactstrap"
 import { CardSection } from "./fragments/cardSection"
+import Cookies from 'js-cookie'
+import AppContext from "../../context/context"
+import { useContext, useState } from "react"
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js"
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:1337"
 
 export const CheckoutForm = () => {
+  const userToken = Cookies.get('token')
+  const appContext = useContext(AppContext)
+  const [data, setData] = useState({
+    address: '',
+    stripe_id: ''
+  })
+  // token
+  const elements = useElements()
+  const stripe = useStripe()
+  const handleChange = (e) => {
+    const updatedItem = data[e.target.name] = e.target.value
+    setData({ ...data, updatedItem })
+  }
+  const submitOrder = async () => {
+    // stripeでカード情報を安全に送るためのtokenを作成する
+    const cardElement = elements.getElement(CardElement)
+    const token = await stripe.createToken(cardElement)
+
+    const response = await fetch(`${API_URL}/api/orders`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        // 'Content-Type': 'application/json'
+      },
+      mode: 'cors',
+      body: JSON.stringify({
+        amount: Number(appContext.cart.total),
+        dishes: appContext.cart.items,
+        address: data.address,
+        token: token.token.id
+      })
+    })
+    console.log(response)
+    if (response.ok) {
+      console.log('注文に成功しました。')
+    } else {
+      console.log('注文に失敗しました。')
+    }
+  }
+
   return (
     <div className="paper">
       <h5>あなたの情報</h5>
@@ -9,10 +56,10 @@ export const CheckoutForm = () => {
       <FormGroup>
         <div>
           <Label>住所</Label>
-          <Input name="address" />
+          <Input name="address" onChange={(e) => handleChange(e)} />
         </div>
       </FormGroup>
-      < CardSection />
+      < CardSection submitOrder={submitOrder} />
       <style jsx global>
         {`
           .paper {

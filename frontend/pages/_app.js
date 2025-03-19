@@ -36,7 +36,6 @@ class MyApp extends App {
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
-
         }
       }).then(async (res) => {
         if (!res.ok) {
