@@ -12,10 +12,13 @@ export const CardSection = (props) => {
                 <CardElement />
               </div>
               <br />
+              {props.errorMessage ? (<div style={{ color: "red" }}>{props.errorMessage}</div>) : null}
+              {props.successMessage ? (<div style={{ color: "green" }}>{props.successMessage}</div>) : null}
               <div className="order-button-wrapper">
                 <button onClick={() => props.submitOrder()}>注文を確認</button>
               </div>
             </div>
+
           </fieldset>
         </div>
       </div>
