@@ -14,12 +14,16 @@ export const CheckoutForm = () => {
     address: '',
     stripe_id: ''
   })
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
   // token
   const elements = useElements()
   const stripe = useStripe()
   const handleChange = (e) => {
     const updatedItem = data[e.target.name] = e.target.value
     setData({ ...data, updatedItem })
+    setError("")
+    setSuccess("")
   }
   const submitOrder = async () => {
     // stripeでカード情報を安全に送るためのtokenを作成する
@@ -31,7 +35,6 @@ export const CheckoutForm = () => {
       credentials: 'include',
       headers: {
         Authorization: `Bearer ${userToken}`,
-        // 'Content-Type': 'application/json'
       },
       mode: 'cors',
       body: JSON.stringify({
@@ -41,11 +44,11 @@ export const CheckoutForm = () => {
         token: token.token.id
       })
     })
-    console.log(response)
     if (response.ok) {
-      console.log('注文に成功しました。')
+      setSuccess('注文に成功しました。')
+
     } else {
-      console.log('注文に失敗しました。')
+      setErrors('注文に失敗しました。')
     }
   }
 
@@ -59,7 +62,7 @@ export const CheckoutForm = () => {
           <Input name="address" onChange={(e) => handleChange(e)} />
         </div>
       </FormGroup>
-      < CardSection submitOrder={submitOrder} />
+      < CardSection submitOrder={submitOrder} errorMessage={error} successMessage={success} />
       <style jsx global>
         {`
           .paper {
